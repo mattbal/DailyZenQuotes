@@ -4,7 +4,7 @@ import { FormEvent, useRef, useState } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export default function Home() {
-  const captchaRef = useRef(null);
+  const captchaRef = useRef<HCaptcha>(null);
   const [status, setStatus] = useState('idle'); // idle | submitting | error | submitted
   const [error, setError] = useState('');
   const [token, setToken] = useState('');
