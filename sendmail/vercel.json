@@ -6,7 +6,7 @@
     }
   ],
   "functions": {
-    "api/sendmail.js": {
+    "api/sendemail.js": {
       "maxDuration": 60
     }
   }
