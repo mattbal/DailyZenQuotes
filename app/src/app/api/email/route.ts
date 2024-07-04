@@ -76,4 +76,6 @@ export async function DELETE(req: NextRequest) {
       status: 500,
     });
   }
+
+  return new Response();
 }
