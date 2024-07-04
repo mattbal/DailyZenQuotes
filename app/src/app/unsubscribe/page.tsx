@@ -1,8 +1,8 @@
 'use client';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function Page() {
+function Unsubscribe() {
   const [status, setStatus] = useState('idle'); // idle | submitting | error | submitted
   const [error, setError] = useState('');
 
@@ -52,5 +52,13 @@ export default function Page() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <Unsubscribe />
+    </Suspense>
   );
 }
