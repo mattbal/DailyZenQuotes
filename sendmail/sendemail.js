@@ -45,7 +45,7 @@ async function handler() {
     emails.forEach(async (email) => {
       const html = `<p>${quote.quote}</p>
       <p>—${quote.author}</p>
-      <a href="https://dailyzenquotes.com/unsubscribe?qs=${email.encryptedEmail} style="margin-top:2rem;">Unsubscribe</a>
+      <a href="https://dailyzenquotes.com/unsubscribe?qs=${email.encryptedEmail}">Unsubscribe</a>
       `
 
       await transporter.sendMail({
