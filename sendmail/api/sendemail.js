@@ -31,7 +31,7 @@ async function handler() {
         }
       })
     }
-
+    console.log("Found quote for the day. Quote #", index.index)
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -54,6 +54,7 @@ async function handler() {
         html,
       });
     })
+    console.log("Sent emails")
   } catch (error) {
     console.error(error)
   }
