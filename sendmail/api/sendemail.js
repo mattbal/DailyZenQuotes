@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
-async function handler() {
+export async function GET() {
   try {
     const emails = await prisma.email.findMany()
     const index = await prisma.index.findFirst()
@@ -59,5 +59,3 @@ async function handler() {
     console.error(error)
   }
 }
-
-handler()
