@@ -1,9 +1,9 @@
-const nodemailer = require("nodemailer");
-const { PrismaClient } = require('@prisma/client')
+import nodemailer from 'nodemailer'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-async function GET() {
+export async function GET() {
   try {
     const emails = await prisma.email.findMany()
     const index = await prisma.index.findFirst()
@@ -61,5 +61,3 @@ async function GET() {
 
   return new Response('sent')
 }
-
-module.exports = { GET }
