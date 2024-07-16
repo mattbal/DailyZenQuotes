@@ -52,6 +52,10 @@ export async function GET() {
         to: email.email,
         subject: 'Daily Zen Quote',
         html,
+      }, (err, info) => {
+        if (err) {
+          console.error(err)
+        }
       });
     })
     console.log("Sent emails")
