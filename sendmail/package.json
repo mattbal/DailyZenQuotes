@@ -2,8 +2,7 @@
   "name": "sendmail",
   "version": "1.0.0",
   "description": "",
-  "main": "/api/sendemail.js",
-  "type": "module",
+  "main": "sendmail.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma generate"
@@ -11,6 +10,7 @@
   "author": "",
   "dependencies": {
     "@prisma/client": "^5.16.1",
+    "dotenv": "^16.4.5",
     "nodemailer": "^6.9.14"
   },
   "devDependencies": {
