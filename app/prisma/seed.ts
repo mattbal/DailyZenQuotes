@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/app/lib/db';
 import fs from 'node:fs';
-
-const prisma = new PrismaClient();
 
 async function main() {
   try {
