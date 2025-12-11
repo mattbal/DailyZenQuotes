@@ -6,9 +6,9 @@ export const runtime = 'nodejs';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { encryptedEmail: String } }
+  { params }: { params: Promise<{ encryptedEmail: String }> }
 ) {
-  let encryptedEmail = params.encryptedEmail;
+  const { encryptedEmail } = await params;
 
   const key = Buffer.from(process.env.SECRET_KEY!, 'base64');
   const ivCipherText = Buffer.from(encryptedEmail, 'base64url');
