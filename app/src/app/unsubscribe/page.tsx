@@ -1,6 +1,7 @@
 'use client';
 import { useState, FormEvent, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { statusSchema } from '../schemas';
 
 function Unsubscribe() {
   const [status, setStatus] = useState('idle'); // idle | submitting | error | submitted
@@ -18,14 +19,21 @@ function Unsubscribe() {
     const res = await fetch(`/api/email/${encryptedEmail}`, {
       method: 'DELETE',
     });
-    const json = await res.json();
-    if (!res.ok) {
-      setStatus('error');
-      if (json.error) {
-        setError(json.error);
+
+    try {
+      const json = await res.json();
+      const result = statusSchema.parse(json);
+      if (!res.ok) {
+        setStatus('error');
+        if (result.error) {
+          setError(result.error);
+        }
+      } else {
+        setStatus('submitted');
       }
-    } else {
-      setStatus('submitted');
+    } catch (err) {
+      setStatus('error');
+      setError('Something went wrong');
     }
   }
 

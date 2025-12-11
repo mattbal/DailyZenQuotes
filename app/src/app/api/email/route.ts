@@ -1,20 +1,28 @@
 import crypto from 'node:crypto';
-import prisma from '@/app/lib/prisma';
+import prisma from '@/app/lib/db';
+import { createEmailSchema } from '@/app/schemas';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
-  const { token, email } = await req.json();
-  const validEmail =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-      email
-    );
-
-  if (!validEmail) {
-    return new Response(JSON.stringify({ error: 'Invalid email' }), {
+  let body;
+  try {
+    body = await req.json();
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
       status: 400,
     });
   }
+  const result = createEmailSchema.safeParse(body);
+
+  if (!result.success) {
+    return new Response(JSON.stringify({ error: 'Invalid data' }), {
+      status: 400,
+    });
+  }
+
+  const email = result.data.email;
+  const token = result.data.token;
 
   const hcaptcha_res = await fetch('https://api.hcaptcha.com/siteverify/', {
     method: 'POST',
@@ -25,9 +33,12 @@ export async function POST(req: Request) {
   });
 
   if (hcaptcha_res.status !== 200) {
-    return new Response(JSON.stringify({ error: 'Invalid captcha' }), {
-      status: 400,
-    });
+    return Response.json(
+      { error: 'Invalid captcha' },
+      {
+        status: 400,
+      }
+    );
   }
 
   const key = Buffer.from(process.env.SECRET_KEY!, 'base64');
@@ -45,10 +56,18 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error }), {
-      status: 500,
-    });
+    return Response.json(
+      { error },
+      {
+        status: 500,
+      }
+    );
   }
 
-  return new Response(JSON.stringify({ data: email }));
+  return Response.json(
+    {},
+    {
+      status: 200,
+    }
+  );
 }

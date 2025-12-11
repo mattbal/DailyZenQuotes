@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { FormEvent, useRef, useState } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { statusSchema } from './schemas';
 
 export default function Home() {
   const captchaRef = useRef<HCaptcha>(null);
@@ -23,15 +24,22 @@ export default function Home() {
         email,
       }),
     });
-    const json = await res.json();
-    if (!res.ok) {
-      setStatus('error');
-      if (json.error) {
-        setError(json.error);
+
+    try {
+      const json = await res.json();
+      const result = statusSchema.parse(json);
+      if (!res.ok) {
+        setStatus('error');
+        if (result.error) {
+          setError(result.error);
+        }
+      } else {
+        setStatus('submitted');
+        setEmail('');
       }
-    } else {
-      setStatus('submitted');
-      setEmail('');
+    } catch (err) {
+      setStatus('error');
+      setError('Something went wrong');
     }
 
     // reset captcha
@@ -72,7 +80,7 @@ export default function Home() {
               />
               <button
                 type='submit'
-                className='bg-gray-900 text-white px-3 h-full self-center focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-md xs:rounded-l-none xs:rounded-r-md -ml-px py-2 w-full xs:w-fit'
+                className='bg-gray-900 text-white px-3 h-full self-center focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-md xs:rounded-l-none xs:rounded-r-md py-2 w-full xs:w-fit'
                 disabled={status === 'submitting'}
               >
                 {status === 'submitting' ? 'Submitting...' : 'Subscribe'}

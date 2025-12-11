@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import prisma from '@/app/lib/prisma';
+import prisma from '@/app/lib/db';
 import { NextRequest } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -9,7 +9,6 @@ export async function DELETE(
   { params }: { params: { encryptedEmail: String } }
 ) {
   let encryptedEmail = params.encryptedEmail;
-  console.log('encryptedEmail: ', encryptedEmail);
 
   const key = Buffer.from(process.env.SECRET_KEY!, 'base64');
   const ivCipherText = Buffer.from(encryptedEmail, 'base64url');
@@ -26,10 +25,13 @@ export async function DELETE(
       },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error }), {
-      status: 500,
-    });
+    return Response.json(
+      { error },
+      {
+        status: 500,
+      }
+    );
   }
 
-  return new Response(JSON.stringify({ success: true }));
+  return Response.json({ success: true });
 }
